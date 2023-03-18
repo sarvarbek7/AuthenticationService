@@ -11,12 +11,13 @@ namespace AuthenticationService.Api.Brokers.Storages
         public StorageBroker(IConfiguration configuration)
         {
             this.configuration = configuration;
+            this.Database.Migrate();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            string connectionString = this.configuration.GetConnectionString("LocalSqlServer");
+            string connectionString = this.configuration.GetConnectionString("localdb");
             optionsBuilder.UseSqlServer(connectionString);
         }
 
