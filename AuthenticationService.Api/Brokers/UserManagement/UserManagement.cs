@@ -13,7 +13,5 @@ namespace AuthenticationService.Api.Brokers.UserManagement
             this.userManager = userManager;
             this.roleManager = roleManager;
         }
-
-
     }
 }
