@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Foundations\Users\UserService.Validations.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EFxceptions.Identity" Version="0.4.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.4" />
@@ -29,8 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Brokers\Loggings\" />
-    <Folder Include="Foundations\Users\" />
+    <None Include="Foundations\Users\UserService.Validations.cs" />
   </ItemGroup>
 
 </Project>
