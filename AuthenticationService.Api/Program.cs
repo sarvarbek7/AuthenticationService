@@ -1,4 +1,5 @@
 using AuthenticationService.Api.Brokers.Storages;
+using AuthenticationService.Api.Brokers.UserManagement;
 using AuthenticationService.Api.Models.Users;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add DbContext and Identity
 builder.Services.AddDbContext<StorageBroker>();
 
 builder.Services.AddIdentityCore<User>()
@@ -18,6 +20,9 @@ builder.Services.AddIdentityCore<User>()
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
+
+builder.Services.AddTransient<IStorageBroker, StorageBroker>();
+builder.Services.AddTransient<IUserManagement, UserManagement>();
 
 var app = builder.Build();
 
