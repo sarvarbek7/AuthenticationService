@@ -13,5 +13,23 @@ namespace AuthenticationService.Api.Brokers.UserManagement
             this.userManager = userManager;
             this.roleManager = roleManager;
         }
+
+        public async ValueTask<User> InsertUserAsync(User user, string roleName)
+        {
+            bool roleExists = await roleManager.RoleExistsAsync(roleName);
+            
+            if (!roleExists)
+            {
+                var profession = new Profession();
+                profession.Name = roleName;
+
+                await roleManager.CreateAsync(profession);
+            }
+
+            await this.userManager.CreateAsync(user);
+            await this.userManager.AddToRoleAsync(user, roleName);
+  
+            return user;
+        }
     }
 }
