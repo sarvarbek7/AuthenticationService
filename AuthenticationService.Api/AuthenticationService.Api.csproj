@@ -32,13 +32,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Xeption" Version="2.5.0" />
   </ItemGroup>
-
-  <ItemGroup>
-<<<<<<< HEAD
-    <None Include="Foundations\Users\UserService.Validations.cs" />
-=======
-    <Folder Include="Brokers\Loggings\" />
->>>>>>> users/sarvarbek7/infra-init-unit_test_project
-  </ItemGroup>
-
 </Project>

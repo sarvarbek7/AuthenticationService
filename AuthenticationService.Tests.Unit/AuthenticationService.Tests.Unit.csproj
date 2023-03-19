@@ -1,8 +1,7 @@
-<<<<<<< HEAD
+
 <Project Sdk="Microsoft.NET.Sdk">
-=======
-﻿<Project Sdk="Microsoft.NET.Sdk">
->>>>>>> users/sarvarbek7/infra-init-unit_test_project
+
+
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -13,15 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
-=======
     <PackageReference Include="Fare" Version="2.2.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
     <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="Tynamix.ObjectFiller" Version="1.5.8" />
     <PackageReference Include="Tynamix.ObjectFiller.RegEx" Version="1.0.0" />
->>>>>>> users/sarvarbek7/infra-init-unit_test_project
+
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -36,12 +33,4 @@
   <ItemGroup>
     <ProjectReference Include="..\AuthenticationService.Api\AuthenticationService.Api.csproj" />
   </ItemGroup>
-
-<<<<<<< HEAD
-  <ItemGroup>
-    <Folder Include="Services\Foundations\Users\" />
-  </ItemGroup>
-
-=======
->>>>>>> users/sarvarbek7/infra-init-unit_test_project
 </Project>
