@@ -15,6 +15,7 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
             string randomRoleName = CreateRandomRole();
             var nullUserException = new NullUserException();
 
+<<<<<<< HEAD
             var expectedUserValidationException =
                 new UserValidationException(nullUserException);
 
@@ -24,6 +25,17 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
 
             // then
             await Assert.ThrowsAsync<UserValidationException>(() =>
+=======
+            var expectedUserValidationException = 
+                new UserValidationException(nullUserException);
+
+            // when
+            ValueTask<User> registerUserTask = 
+                this.userService.RegisterUserAsync(noUser, randomRoleName);
+
+            // then
+            await Assert.ThrowsAsync<UserValidationException>(() => 
+>>>>>>> users/sarvarbek7/infra-init-unit_test_project
                 registerUserTask.AsTask());
 
             this.loggingBroker.Verify(broker =>
@@ -33,6 +45,7 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
             this.userManagement.VerifyNoOtherCalls();
             this.loggingBroker.VerifyNoOtherCalls();
         }
+<<<<<<< HEAD
 
         [Fact]
         public async void ShouldThrowUserValidationExceptionOnRegisterWhenPhoneNumberIsNull()
@@ -53,5 +66,7 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
             ValueTask<User> registerUserTask = 
                 this.userService.RegisterUserAsync(invalidUser, roleName);
         }
+=======
+>>>>>>> users/sarvarbek7/infra-init-unit_test_project
     }
 }

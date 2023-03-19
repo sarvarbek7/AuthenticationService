@@ -1,5 +1,6 @@
 using AuthenticationService.Api.Brokers.Storages;
 using AuthenticationService.Api.Brokers.UserManagement;
+using AuthenticationService.Api.Foundations.Users;
 using AuthenticationService.Api.Models.Users;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
 builder.Services.AddTransient<IUserManagement, UserManagement>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
 
