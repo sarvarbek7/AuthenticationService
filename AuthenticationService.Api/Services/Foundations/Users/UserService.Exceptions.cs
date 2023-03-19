@@ -18,6 +18,10 @@ namespace AuthenticationService.Api.Foundations.Users
             {
                 throw CreateAndLogUserValidationException(nullUserException);
             }
+            catch(InvalidUserException invalidUserException)
+            {
+                throw CreateAndLogUserValidationException(invalidUserException);
+            }
         }
 
         private UserValidationException CreateAndLogUserValidationException(

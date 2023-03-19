@@ -8,6 +8,7 @@ namespace AuthenticationService.Api.Foundations.Users
         private void ValidateOnRegister(User user)
         {
             ValidateUserIsNotNull(user);
+            ValidateUserPhoneNumberIsNotNull(user);
         }
 
         private void ValidateUserIsNotNull(User user)
@@ -15,6 +16,16 @@ namespace AuthenticationService.Api.Foundations.Users
             if (user is null)
             {
                 throw new NullUserException();
+            }
+        }
+
+        private void ValidateUserPhoneNumberIsNotNull(User user)
+        {
+            if (user.PhoneNumber is null)
+            {
+                throw new InvalidUserException(
+                    parameterName: nameof(User.PhoneNumber),
+                    value: user.PhoneNumber);
             }
         }
     }
