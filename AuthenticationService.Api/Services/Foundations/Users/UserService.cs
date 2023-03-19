@@ -19,6 +19,7 @@ namespace AuthenticationService.Api.Foundations.Users
         public ValueTask<User> RegisterUserAsync(User user, string roleName) =>
             TryCatch(async () =>
             {
+
                 return await userManagement.InsertUserAsync(user, roleName);
             });
     }
