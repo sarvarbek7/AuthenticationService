@@ -1,9 +1,11 @@
-﻿using AuthenticationService.Api.Brokers.Loggings;
+﻿using System.Linq.Expressions;
+using AuthenticationService.Api.Brokers.Loggings;
 using AuthenticationService.Api.Brokers.UserManagement;
 using AuthenticationService.Api.Foundations.Users;
 using AuthenticationService.Api.Models.Users;
 using Moq;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
 {
@@ -31,6 +33,11 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
 
         private static string CreateRandomRole() =>
             new MnemonicString(1).GetValue();
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException)
+        {
+            return actualException => actualException.SameExceptionAs(expectedException);
+        }
 
         private static Filler<User> CreateUserFiller(DateTimeOffset date)
         {
