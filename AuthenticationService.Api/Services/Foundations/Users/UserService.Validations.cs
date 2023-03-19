@@ -7,6 +7,15 @@ namespace AuthenticationService.Api.Foundations.Users
     {
         private void ValidateOnRegister(User user)
         {
+            ValidateUserIsNotNull(user);
+        }
+
+        private void ValidateUserIsNotNull(User user)
+        {
+            if (user is null)
+            {
+                throw new NullUserException();
+            }
         }
     }
 }

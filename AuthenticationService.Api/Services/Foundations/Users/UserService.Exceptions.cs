@@ -1,4 +1,6 @@
 ﻿using AuthenticationService.Api.Models.Users;
+using AuthenticationService.Api.Models.Users.Exceptions;
+using Xeptions;
 
 namespace AuthenticationService.Api.Foundations.Users
 {
@@ -12,10 +14,21 @@ namespace AuthenticationService.Api.Foundations.Users
             {
                 return await returningUserFunction();
             }
-            catch (Exception ex)
+            catch (NullUserException nullUserException)
             {
-                throw new Exception();
+                throw CreateAndLogUserValidationException(nullUserException);
             }
+        }
+
+        private UserValidationException CreateAndLogUserValidationException(
+            Xeption innerException)
+        {
+            var userValidationException = 
+                new UserValidationException(innerException);
+
+            this.loggingBroker.LogError(userValidationException);
+
+            return userValidationException;
         }
     }
 }
