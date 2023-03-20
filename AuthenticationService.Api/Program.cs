@@ -1,5 +1,7 @@
+using AuthenticationService.Api.Brokers.Loggings;
 using AuthenticationService.Api.Brokers.Storages;
 using AuthenticationService.Api.Brokers.UserManagement;
+using AuthenticationService.Api.Foundations.Users;
 using AuthenticationService.Api.Models.Users;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,8 +23,13 @@ builder.Services.AddIdentityCore<User>()
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
+// Add Brokers
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
 builder.Services.AddTransient<IUserManagement, UserManagement>();
+builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
+
+// Add Foundation Services
+builder.Services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
 
