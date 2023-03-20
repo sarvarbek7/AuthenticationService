@@ -3,6 +3,7 @@ using AuthenticationService.Api.Models.Users;
 using AuthenticationService.Api.Models.Users.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace AuthenticationService.Api.Foundations.Users
@@ -44,6 +45,13 @@ namespace AuthenticationService.Api.Foundations.Users
             {
                 var failedUserStorageException =
                     new FailedUserStorageException(sqlException);
+
+                throw CreateAndLogUserDependencyException(failedUserStorageException);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(dbUpdateException);
 
                 throw CreateAndLogUserDependencyException(failedUserStorageException);
             }
