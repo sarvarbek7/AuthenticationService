@@ -1,9 +1,11 @@
 ﻿using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using AuthenticationService.Api.Brokers.Loggings;
 using AuthenticationService.Api.Brokers.UserManagement;
 using AuthenticationService.Api.Foundations.Users;
 using AuthenticationService.Api.Models.Users;
 using Fare;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using Moq;
 using Tynamix.ObjectFiller;
@@ -43,6 +45,9 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
 
         private static string GetRandomMessage() =>
             new MnemonicString(3, 6, 9).GetValue();
+
+        private static SqlException GetSqlException() => 
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static Filler<User> CreateUserFiller(DateTimeOffset date)
         {
