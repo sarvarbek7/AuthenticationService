@@ -1,4 +1,5 @@
-﻿using AuthenticationService.Api.Models.Users;
+﻿using System.Text.RegularExpressions;
+using AuthenticationService.Api.Models.Users;
 using AuthenticationService.Api.Models.Users.Exceptions;
 
 namespace AuthenticationService.Api.Foundations.Users
@@ -9,6 +10,7 @@ namespace AuthenticationService.Api.Foundations.Users
         {
             ValidateUserIsNotNull(user);
             ValidateUserPhoneNumberIsNotNull(user);
+            ValidateUserPhoneNumberIsCorrectFormat(user);
         }
 
         private void ValidateUserIsNotNull(User user)
@@ -27,6 +29,20 @@ namespace AuthenticationService.Api.Foundations.Users
                     parameterName: nameof(User.PhoneNumber),
                     value: user.PhoneNumber);
             }
+        }
+
+        private void ValidateUserPhoneNumberIsCorrectFormat(User user)
+        {
+            string uzbPhoneNumberFormat = @"^\+998[9873][01345789][0-9]{7}$";
+
+            Match match = Regex.Match(user.PhoneNumber, uzbPhoneNumberFormat);
+
+            if (!match.Success)
+            {
+                throw new InvalidUserException(
+                    parameterName: nameof(User.PhoneNumber), 
+                    value: user.PhoneNumber);
+            }    
         }
     }
 }

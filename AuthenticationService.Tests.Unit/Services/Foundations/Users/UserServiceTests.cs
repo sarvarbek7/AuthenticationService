@@ -39,6 +39,9 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
             return actualException => actualException.SameExceptionAs(expectedException);
         }
 
+        private static string GetRandomMessage() =>
+            new MnemonicString(3, 6, 9).GetValue();
+
         private static Filler<User> CreateUserFiller(DateTimeOffset date)
         {
             var filler = new Filler<User>();

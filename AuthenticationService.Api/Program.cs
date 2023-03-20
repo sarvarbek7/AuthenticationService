@@ -23,9 +23,12 @@ builder.Services.AddIdentityCore<User>()
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
+// Add Brokers
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
 builder.Services.AddTransient<IUserManagement, UserManagement>();
 builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
+
+// Add Foundation Services
 builder.Services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
