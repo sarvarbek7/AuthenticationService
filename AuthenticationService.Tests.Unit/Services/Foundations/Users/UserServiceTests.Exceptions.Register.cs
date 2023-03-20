@@ -125,7 +125,7 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
                 this.userService.RegisterUserAsync(inputUser, roleName);
 
             // then
-            await Assert.ThrowsAsync<UserDependencyValidationException>(() =>
+            await Assert.ThrowsAsync<UserDependencyException>(() =>
                 registerUserTask.AsTask());
 
             this.userManagement.Verify(broker =>

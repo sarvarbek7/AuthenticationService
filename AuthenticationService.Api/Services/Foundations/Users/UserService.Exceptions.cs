@@ -1,6 +1,8 @@
-﻿using AuthenticationService.Api.Models.Users;
+﻿using System.Data;
+using AuthenticationService.Api.Models.Users;
 using AuthenticationService.Api.Models.Users.Exceptions;
 using EFxceptions.Models.Exceptions;
+using Microsoft.Data.SqlClient;
 using Xeptions;
 
 namespace AuthenticationService.Api.Foundations.Users
@@ -38,6 +40,13 @@ namespace AuthenticationService.Api.Foundations.Users
 
                 throw CreateAndLogUserDependencyValidationException(alreadyExistsUserException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(sqlException);
+
+                throw CreateAndLogUserDependencyException(failedUserStorageException);
+            }
         }
 
         private UserValidationException CreateAndLogUserValidationException(
@@ -60,6 +69,15 @@ namespace AuthenticationService.Api.Foundations.Users
             this.loggingBroker.LogError(userDependencyValidationException);
 
             return userDependencyValidationException;
+        }
+
+        private UserDependencyException CreateAndLogUserDependencyException(Xeption innerException)
+        {
+            var userDependencyException = new UserDependencyException(innerException);
+
+            this.loggingBroker.LogCritical(userDependencyException);
+
+            return userDependencyException;
         }
     }
 }
