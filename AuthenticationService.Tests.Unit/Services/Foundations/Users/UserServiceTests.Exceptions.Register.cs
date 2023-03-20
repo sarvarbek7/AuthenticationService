@@ -3,6 +3,7 @@ using AuthenticationService.Api.Models.Users.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Fare;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -119,6 +120,46 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
 
             this.userManagement.Setup(broker =>
                 broker.InsertUserAsync(inputUser, roleName)).ThrowsAsync(sqlException);
+
+            // when
+            ValueTask<User> registerUserTask =
+                this.userService.RegisterUserAsync(inputUser, roleName);
+
+            // then
+            await Assert.ThrowsAsync<UserDependencyException>(() =>
+                registerUserTask.AsTask());
+
+            this.userManagement.Verify(broker =>
+                broker.InsertUserAsync(inputUser, roleName),
+                Times.Once);
+
+            this.loggingBroker.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(expectedUserDependencyException))),
+                Times.Once);
+
+            this.userManagement.VerifyNoOtherCalls();
+            this.loggingBroker.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void ShouldThrowUserDependencyExceptionOnRegisterIfDbUpdateExceptionAndLogItAsync()
+        {
+            // given
+            string uzbPhoneNumberFormat = @"^\+998[9873][01345789][0-9]{7}$";
+            var xeger = new Xeger(uzbPhoneNumberFormat);
+            var generatedPhoneNumber = xeger.Generate();
+            User randomUser = CreateRandomUser();
+            randomUser.PhoneNumber = generatedPhoneNumber;
+            User inputUser = randomUser;
+            string roleName = CreateRandomRole();
+            DbUpdateException dbUpdateException = new DbUpdateException();
+
+            var failedUserStorageException = new FailedUserStorageException(dbUpdateException);
+
+            var expectedUserDependencyException = new UserDependencyException(failedUserStorageException);
+
+            this.userManagement.Setup(broker =>
+                broker.InsertUserAsync(inputUser, roleName)).ThrowsAsync(dbUpdateException);
 
             // when
             ValueTask<User> registerUserTask =
