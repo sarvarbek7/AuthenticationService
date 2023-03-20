@@ -180,5 +180,45 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
             this.userManagement.VerifyNoOtherCalls();
             this.loggingBroker.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void ShouldThrowUserServiceExceptionOnRegisterIfExceptionOccursAndLogItAsync()
+        {
+            // given
+            string uzbPhoneNumberFormat = @"^\+998[9873][01345789][0-9]{7}$";
+            var xeger = new Xeger(uzbPhoneNumberFormat);
+            var generatedPhoneNumber = xeger.Generate();
+            User randomUser = CreateRandomUser();
+            randomUser.PhoneNumber = generatedPhoneNumber;
+            User inputUser = randomUser;
+            string roleName = CreateRandomRole();
+
+            var exception = new Exception();
+            var failedUserServiceException = new FailedUserServiceException(exception);
+
+            var expectedUserServiceException = new UserServiceException(failedUserServiceException);
+
+            this.userManagement.Setup(broker =>
+                broker.InsertUserAsync(inputUser, roleName)).ThrowsAsync(exception);
+
+            // when
+            ValueTask<User> registerUserTask =
+                this.userService.RegisterUserAsync(inputUser, roleName);
+
+            // then
+            await Assert.ThrowsAsync<UserServiceException>(() =>
+                registerUserTask.AsTask());
+
+            this.userManagement.Verify(broker =>
+                broker.InsertUserAsync(inputUser, roleName),
+                Times.Once);
+
+            this.loggingBroker.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(expectedUserServiceException))),
+                Times.Once);
+
+            this.userManagement.VerifyNoOtherCalls();
+            this.loggingBroker.VerifyNoOtherCalls();
+        }
     }
 }
