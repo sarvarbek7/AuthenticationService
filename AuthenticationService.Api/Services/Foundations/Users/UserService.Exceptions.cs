@@ -1,5 +1,6 @@
 ﻿using AuthenticationService.Api.Models.Users;
 using AuthenticationService.Api.Models.Users.Exceptions;
+using EFxceptions.Models.Exceptions;
 using Xeptions;
 
 namespace AuthenticationService.Api.Foundations.Users
@@ -18,21 +19,39 @@ namespace AuthenticationService.Api.Foundations.Users
             {
                 throw CreateAndLogUserValidationException(nullUserException);
             }
-            catch(InvalidUserException invalidUserException)
+            catch (InvalidUserException invalidUserException)
             {
                 throw CreateAndLogUserValidationException(invalidUserException);
+            }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(duplicateKeyException);
+
+                throw CreateAndLogUserDependencyValidationException(failedUserStorageException);
             }
         }
 
         private UserValidationException CreateAndLogUserValidationException(
             Xeption innerException)
         {
-            var userValidationException = 
+            var userValidationException =
                 new UserValidationException(innerException);
 
             this.loggingBroker.LogError(userValidationException);
 
             return userValidationException;
+        }
+
+        private UserDependencyValidationException CreateAndLogUserDependencyValidationException(
+            Xeption innerException)
+        {
+            var userDependencyValidationException = 
+                new UserDependencyValidationException(innerException);
+
+            this.loggingBroker.LogError(userDependencyValidationException);
+
+            return userDependencyValidationException;
         }
     }
 }

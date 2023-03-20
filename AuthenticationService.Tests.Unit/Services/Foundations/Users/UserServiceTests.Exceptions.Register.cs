@@ -1,6 +1,7 @@
 ﻿using AuthenticationService.Api.Models.Users;
 using AuthenticationService.Api.Models.Users.Exceptions;
 using EFxceptions.Models.Exceptions;
+using Fare;
 using Moq;
 using Xunit;
 
@@ -9,10 +10,14 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         [Fact]
-        public async void ShouldThrowUserDependencyValidationExceptionOnRegisterIfDuplicateKeyErrorOccursAndLogITAsync()
+        public async void ShouldThrowUserDependencyValidationExceptionOnRegisterIfDuplicateKeyErrorOccursAndLogItAsync()
         {
             // given
+            string uzbPhoneNumberFormat = @"^\+998[9873][01345789][0-9]{7}$";
+            var xeger = new Xeger(uzbPhoneNumberFormat);
+            var generatedPhoneNumber = xeger.Generate();
             User randomUser = CreateRandomUser();
+            randomUser.PhoneNumber = generatedPhoneNumber;
             User inputUser = randomUser;
             string roleName = CreateRandomRole();
             string randomMessage = GetRandomMessage();
@@ -32,6 +37,10 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
             // then
             await Assert.ThrowsAsync<UserDependencyValidationException>(() => 
                 registerUserTask.AsTask());
+
+            this.userManagement.Verify(broker => 
+                broker.InsertUserAsync(inputUser, roleName), 
+                Times.Once);
 
             this.loggingBroker.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedUserDependencyValidationException))), 

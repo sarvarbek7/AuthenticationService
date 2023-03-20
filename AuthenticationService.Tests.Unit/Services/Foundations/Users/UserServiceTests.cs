@@ -3,6 +3,8 @@ using AuthenticationService.Api.Brokers.Loggings;
 using AuthenticationService.Api.Brokers.UserManagement;
 using AuthenticationService.Api.Foundations.Users;
 using AuthenticationService.Api.Models.Users;
+using Fare;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -46,11 +48,15 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
         {
             var filler = new Filler<User>();
 
+            string uzbPhoneNumberFormat = @"^\+998[9873][01345789][0-9]{7}$";
+            var xeger = new Xeger(uzbPhoneNumberFormat);
+            var generatedPhoneNumber = xeger.Generate();
+
             filler.Setup()
                 .OnType<DateTimeOffset>().Use(date)
                 .OnProperty(user => user.FirstName).Use(new RealNames(NameStyle.FirstName))
                 .OnProperty(user => user.LastName).Use(new RealNames(NameStyle.LastName))
-                .OnProperty(user => user.PhoneNumber).Use("+998331234567")
+                .OnProperty(user => user.PhoneNumber).Use(generatedPhoneNumber)
                 .OnProperty(user => user.Email).Use(new EmailAddresses(".com"))
                 .IgnoreInheritance()
                 .IgnoreAllUnknownTypes();

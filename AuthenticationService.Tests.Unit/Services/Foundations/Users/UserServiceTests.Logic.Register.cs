@@ -1,4 +1,5 @@
 ﻿using AuthenticationService.Api.Models.Users;
+using Fare;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
@@ -12,7 +13,11 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
         public async void ShouldRegisterUserAsync()
         {
             // given
+            string uzbPhoneNumberFormat = @"^\+998[9873][01345789][0-9]{7}$";
+            var xeger = new Xeger(uzbPhoneNumberFormat);
+            var generatedPhoneNumber = xeger.Generate();
             User randomUser = CreateRandomUser();
+            randomUser.PhoneNumber = generatedPhoneNumber;
             User inputUser = randomUser;
             User returningUser = inputUser;
             User expectedUser = returningUser.DeepClone();
