@@ -25,10 +25,18 @@ namespace AuthenticationService.Api.Foundations.Users
             }
             catch (DuplicateKeyException duplicateKeyException)
             {
-                var failedUserStorageException =
-                    new FailedUserStorageException(duplicateKeyException);
+                var alreadyExistsUserException =
+                    new AlreadyExistsUserException(duplicateKeyException);
 
-                throw CreateAndLogUserDependencyValidationException(failedUserStorageException);
+                throw CreateAndLogUserDependencyValidationException(alreadyExistsUserException);
+            }
+            catch (DuplicateKeyWithUniqueIndexException duplicateKeyWithUniqueIndexException)
+            {
+                var alreadyExistsUserException =
+                    new AlreadyExistsUserException(duplicateKeyWithUniqueIndexException, 
+                    duplicateKeyWithUniqueIndexException.DuplicateKeyValue);
+
+                throw CreateAndLogUserDependencyValidationException(alreadyExistsUserException);
             }
         }
 

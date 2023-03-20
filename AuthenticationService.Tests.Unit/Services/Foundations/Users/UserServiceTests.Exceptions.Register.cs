@@ -10,7 +10,7 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         [Fact]
-        public async void ShouldThrowUserDependencyValidationExceptionOnRegisterIfDuplicateKeyErrorOccursAndLogItAsync()
+        public async void ShouldThrowUserDependencyValidationExceptionOnRegisterIfDuplicateKeyWithUniqueIndexExceptionOccursAndLogItAsync()
         {
             // given
             string uzbPhoneNumberFormat = @"^\+998[9873][01345789][0-9]{7}$";
@@ -21,14 +21,18 @@ namespace AuthenticationService.Tests.Unit.Services.Foundations.Users
             User inputUser = randomUser;
             string roleName = CreateRandomRole();
             string randomMessage = GetRandomMessage();
-            var duplicateKeyException = new DuplicateKeyException(randomMessage);
-            var failedUserStorageException = new FailedUserStorageException(duplicateKeyException);
+
+            var duplicateKeyWithUniqueIndexException =
+                new DuplicateKeyWithUniqueIndexException(randomMessage);
+
+            var alreadyExistsUserException = new AlreadyExistsUserException(
+                duplicateKeyWithUniqueIndexException, duplicateKeyWithUniqueIndexException.DuplicateKeyValue);
 
             var expectedUserDependencyValidationException =
-                new UserDependencyValidationException(failedUserStorageException);
+                new UserDependencyValidationException(alreadyExistsUserException);
 
             this.userManagement.Setup(broker =>
-                broker.InsertUserAsync(inputUser, roleName)).ThrowsAsync(duplicateKeyException);
+                broker.InsertUserAsync(inputUser, roleName)).ThrowsAsync(duplicateKeyWithUniqueIndexException);
 
             // when
             ValueTask<User> registerUserTask =
